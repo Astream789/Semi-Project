@@ -160,7 +160,13 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/bin/console" />
-    <property name="settings.editor.selected.configurable" value="settings.php.debug.servers" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\astre\Semi02\templates\book" />
+      <recent name="C:\Users\astre\Semi02\templates\Create" />
+    </key>
   </component>
   <component name="RunManager" selected="PHP Script.Semi02">
     <configuration name="phpunit.xml.dist" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
@@ -196,7 +202,9 @@
       <workItem from="1680693300219" duration="2649000" />
       <workItem from="1680829091390" duration="1488000" />
       <workItem from="1680830609905" duration="619000" />
-      <workItem from="1680831957789" duration="4046000" />
+      <workItem from="1680831957789" duration="8467000" />
+      <workItem from="1680843639959" duration="13298000" />
+      <workItem from="1681271935426" duration="2544000" />
     </task>
     <servers />
   </component>
@@ -212,18 +220,19 @@
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
     <state x="736" y="326" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1032@0.0.1920.1032" timestamp="1680248061143" />
-    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1680253713927">
-      <screen x="0" y="0" width="1920" height="1032" />
+    <state x="552" y="217" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1680851145282">
+      <screen x="0" y="0" width="1536" height="816" />
     </state>
+    <state x="552" y="217" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1536.816@0.0.1536.816" timestamp="1680851145282" />
     <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1680253713927" />
     <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1680246042034">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
     <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1032@0.0.1920.1032" timestamp="1680246042034" />
-    <state x="463" y="161" key="SettingsEditor" timestamp="1680246026623">
+    <state x="463" y="161" key="SettingsEditor" timestamp="1681274056621">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state x="463" y="161" key="SettingsEditor/0.0.1920.1032@0.0.1920.1032" timestamp="1680246026623" />
+    <state x="463" y="161" key="SettingsEditor/0.0.1920.1032@0.0.1920.1032" timestamp="1681274056621" />
     <state x="616" y="238" key="run.anything.popup" timestamp="1680247715638">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
