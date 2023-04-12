@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    {{ form_start(form) }}
+    <div class="form-group">
+        <label for="tag">Book Name:</label>
+        {{ form_widget(form.BkName,{
+            'attr':{
+                'class':'form-control',
+                'placeholder': 'Book name'
+            }
+        })
+        }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.BkName) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="detail">Detail:</label>
+        {{ form_widget(form.Detail,{
+            'attr':{
+                'class':'form-control',
+                'placeholder': 'Detail'
+            }
+        }) }}
+    </div>
+    <div class="form-group">
+        <label for="image">Image</label>
+        {{ form_widget(form.Image,{
+            'attr':{
+                'placeholder': 'Please select a picture'
+            }
+        }) }}
+    </div>
+    <div class="form-group">
+        <label for="due_date">Date</label>
+        {{ form_widget(form.Date,{
+            'attr':{
+                'class':'form-control'
+            }
+        }) }}
+    </div>
+
+    <div class="form-group">
+        <label for="tag">Tag:</label>
+        {{ form_widget(form.tag,{
+            'attr':{
+                'class':'form-control',
+                'placeholder': 'Tag'
+            }
+        }) }}
+    </div>
+    <input type="submit" name="edit_book" value="Edit" class="btn btn-primary"/>
+    {{ form_end(form) }}
+
+{% endblock %}

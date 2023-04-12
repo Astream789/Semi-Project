@@ -41,6 +41,20 @@ class TagController extends AbstractController
         return $this->redirectToRoute('tag_list');
     }
     /**
+     * @Route("/book/tag/{id}", name="bookByTag")
+     */
+    public function GenreAction(ManagerRegistry $doctrine, $id): Response
+    {
+        $tags = $doctrine->getRepository(Tag::class)->find($id);
+        $books = $tags->getBook();
+        $tags = $doctrine->getRepository(Tag::class)->findAll();
+        return $this->render('book/index.html.twig', [
+            'books' => $books,
+            'tags' => $tags
+        ]);
+
+    }
+    /**
      * @Route("/createtg", name ="create_tag", methods = {"GET","POST"})
      */
     public function createAction(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger)

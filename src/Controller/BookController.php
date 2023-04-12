@@ -11,6 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use function Symfony\Config\Monolog\persistent;
 use Symfony\Component\HttpFoundation\Request;
+use App\Service\FileUploader;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class BookController extends AbstractController
 {
@@ -104,4 +106,44 @@ class BookController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+    /**
+     * @Route("book/bookEdit/{id}", name="edit_book")
+     */
+
+    public function edit(ManagerRegistry $doctrine, int $id, Request $request): Response
+    {
+        $entitymanager = $doctrine->getManager();
+        $books = $entitymanager->getRepository(Book::class)->find($id);
+        $form = $this->createForm(BookType::class, $books);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entitymanager = $doctrine->getManager();
+            $entitymanager->persist($books);
+            $entitymanager->flush();
+
+            return $this->redirectToRoute('book_list', [
+                'id' => $books->getId()
+            ]);
+        }
+        return $this->renderForm('book/edit.html.twig', ['form' => $form,]);
+    }
+    public function saveChanges(ManagerRegistry $doctrine, $form, $request, $books)
+    {
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $books->setBkName($request->request->get('books')['name']);
+            $books->setTag($request->request->get('books')['tags']);
+            $books->setDescription($request->request->get('books')['description']);
+            $entitymanager = $doctrine->getManager();
+            $entitymanager->persist($books);
+            $entitymanager->flush();
+
+            return true;
+        }
+
+        return false;
+    }
+
+
 }
