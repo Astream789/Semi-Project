@@ -107,42 +107,60 @@ class BookController extends AbstractController
         ]);
     }
     /**
-     * @Route("book/bookEdit/{id}", name="edit_book")
+     * @Route("book/bookEdit/{id}", name="app_edit_book")
      */
-
     public function edit(ManagerRegistry $doctrine, int $id, Request $request): Response
     {
-        $entitymanager = $doctrine->getManager();
-        $books = $entitymanager->getRepository(Book::class)->find($id);
-        $form = $this->createForm(BookType::class, $books);
+        $book = new Book();
+        $form = $this->createForm(BookType::class, $book);
+
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entitymanager = $doctrine->getManager();
-            $entitymanager->persist($books);
-            $entitymanager->flush();
+            $uploadedFile = $form->get('Image')->getData();
+            if ($form->isSubmitted() && $form->isValid()) {
+                // upload file
+                $Image = $form->get('Image')->getData();
+                if ($Image) {
+                    $originalFilename = pathinfo($Image->getClientOriginalName(), PATHINFO_FILENAME);
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $Image->guessExtension();
 
-            return $this->redirectToRoute('book_list', [
-                'id' => $books->getId()
-            ]);
+                    // Move the file to the directory where brochures are stored
+                    try {
+                        $Image->move(
+                            $this->getParameter('images_directory'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        $this->addFlash(
+                            'error',
+                            'Cannot upload'
+                        );// ... handle exception if something happens during file upload
+                    }
+                    $book->setImage($newFilename);
+                }else{
+                    $this->addFlash(
+                        'error',
+                        'Cannot upload'
+                    );// ... handle exception if something happens during file upload
+                }
+
+                $entitymanager = $doctrine->getManager();
+                $entitymanager->persist($book);
+                $entitymanager->flush();
+
+                $this->addFlash(
+                    'notice',
+                    'New book Added'
+                );
+                return $this->redirectToRoute('book_list');
+            }
         }
-        return $this->renderForm('book/edit.html.twig', ['form' => $form,]);
-    }
-    public function saveChanges(ManagerRegistry $doctrine, $form, $request, $books)
-    {
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            $books->setBkName($request->request->get('books')['name']);
-            $books->setTag($request->request->get('books')['tags']);
-            $books->setDescription($request->request->get('books')['description']);
-            $entitymanager = $doctrine->getManager();
-            $entitymanager->persist($books);
-            $entitymanager->flush();
-
-            return true;
-        }
-
-        return false;
+        return $this->render('book/createbk.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
 

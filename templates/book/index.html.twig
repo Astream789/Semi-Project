@@ -19,13 +19,13 @@
             </tr>
             </thead>
             <tbody>
-            {% for tag in tags %}
+
             {% for book in books %}
                 <tr>
                     <th scope="row">{{ book.id }}</th>
                     <td>{{ book.BkName }}</td>
                     <td>{{ book.Detail }}</td>
-                    <td>{{ tag.TgName }}</td>
+                {% for tag in tags %}<td>{{ tag.TgName }}</td>{% endfor %}
                     <td>{{ book.Date|date('F j,Y, g:i a') }}</td>
                     <td><img src="{{ asset('uploads/BookImage/' ~ book.Image) }}"><td>
                    <td>
@@ -33,12 +33,12 @@
                         {#                        <a href="{{ path('todo_edit', {'id': book.id}) }}" class='btn btn-default'>Edit</a>#}
                         {#                        <a href="{{ path('todo_delete', {'id': book.id}) }}" class='btn btn-danger'>Delete</a>#}
                         <a href="{{path('book_details',{'id':book.id})}} " class='btn btn-success'>View</a>
-                        <a href="#" class='btn btn-default'>Edit</a>
+                        <a href="{{ path('app_edit_book', {'id': book.id}) }}" class='btn btn-default'>Edit</a>
                         <a href="{{ path('book_delete', {'id': book.id}) }} "class='btn btn-danger'>Delete</a>
                     </td>
                 </tr>
             {% endfor %}
-            {% endfor %}
+
             </tbody>
         </table>
     </div>
