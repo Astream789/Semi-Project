@@ -3,7 +3,7 @@
     {{ form_start(form) }}
     <div class="form-group">
         <label for="category">Category</label>
-        {{ form_widget(form.category,{
+        {{ form_widget(form.Category,{
             'attr':{
                 'class':'form-control'
             }
@@ -11,31 +11,33 @@
     </div>
     <div class="form-group">
         <label for="category">Book Name:</label>
-        {{ form_widget(form.bkname,{
+        {{ form_widget(form.bkName,{
             'attr':{
                 'class':'form-control',
-                'placeholder': 'Book name'
+                'placeholder': 'Product name'
+            }
+        }) }}
+    </div>
+    <div class="form-group">
+        <label for="category">Content:</label>
+        {{ form_widget(form.content,{
+            'attr':{
+                'class':'form-control',
+                'placeholder': 'content'
             }
         }) }}
     </div>
     <div class="form-group">
         <label for="description">Description:</label>
-        {{ form_widget(form.description,{
+        {{ form_widget(form.Description,{
             'attr':{
                 'class':'form-control',
-                'placeholder': 'Description'
+                'placeholder': 'description'
             }
         }) }}
     </div>
-    <div class="form-group">
-        <label for="description">Content:</label>
-        {{ form_widget(form.content,{
-            'attr':{
-                'class':'form-control',
-                'placeholder': 'Content'
-            }
-        }) }}
-    </div>
+
+
     <div class="form-group">
         <label for="due_date">Image</label>
         {{ form_widget(form.image,{

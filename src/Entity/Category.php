@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\AuthorRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AuthorRepository::class)]
-class Author
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
+class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -14,9 +14,9 @@ class Author
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $AuName = null;
+    private ?string $CatName = null;
 
-    #[ORM\ManyToOne(inversedBy: 'author')]
+    #[ORM\ManyToOne(inversedBy: 'Category')]
     private ?Book $book = null;
 
     public function getId(): ?int
@@ -24,14 +24,14 @@ class Author
         return $this->id;
     }
 
-    public function getAuName(): ?string
+    public function getCatName(): ?string
     {
-        return $this->AuName;
+        return $this->CatName;
     }
 
-    public function setAuName(?string $AuName): self
+    public function setCatName(?string $CatName): self
     {
-        $this->AuName = $AuName;
+        $this->CatName = $CatName;
 
         return $this;
     }

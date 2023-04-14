@@ -1,45 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-        <div class="container-fluid mt-3">
-            <h3>Books List</h3>
-        </div>
-    </thead>
-    <div class="bs-example" data-example-id="striped-table">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Book Name</th>
-                <th>Description</th>
-                <th>Tag</th>
-                <th>Date</th>
-                <th>Image</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-
-            {% for book in books %}
+    {% block body %}
+        <div class="bs-example" data-example-id="striped-table">
+            <table class="table table-striped">
+                <thead>
                 <tr>
-                    <th scope="row">{{ book.id }}</th>
-                    <td>{{ book.BkName }}</td>
-                    <td>{{ book.Detail }}</td>
-                {% for tag in tags %}<td>{{ tag.TgName }}</td>{% endfor %}
-                    <td>{{ book.Date|date('F j,Y, g:i a') }}</td>
-                    <td><img src="{{ asset('uploads/BookImage/' ~ book.Image) }}"><td>
-                   <td>
-                        {#                        <a href="{{ path('todo_details', {'id': book.id}) }} " class='btn btn-success'>View</a>#}
-                        {#                        <a href="{{ path('todo_edit', {'id': book.id}) }}" class='btn btn-default'>Edit</a>#}
-                        {#                        <a href="{{ path('todo_delete', {'id': book.id}) }}" class='btn btn-danger'>Delete</a>#}
-                        <a href="{{path('book_details',{'id':book.id})}} " class='btn btn-success'>View</a>
-                        <a href="{{ path('app_edit_book', {'id': book.id}) }}" class='btn btn-default'>Edit</a>
-                        <a href="{{ path('book_delete', {'id': book.id}) }} "class='btn btn-danger'>Delete</a>
-                    </td>
-                </tr>
-            {% endfor %}
+                    <th>#</th>
+                    <th>Category</th>
 
-            </tbody>
-        </table>
-    </div>
-{% endblock %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <th scope="row">{{ category.id }}</th>
+                        <td><a href="{{path('bookByCat',{'id':category.id})}} ">{{ category.catname }}</a></td>
+
+                        <td>
+                            {#                        <a href="{{ path('todo_details', {'id': product.id}) }} " class='btn btn-success'>View</a>#}
+                            {#                        <a href="{{ path('todo_edit', {'id': product.id}) }}" class='btn btn-default'>Edit</a>#}
+                            {#                        <a href="{{ path('todo_delete', {'id': product.id}) }}" class='btn btn-danger'>Delete</a>#}
+                            <a href="{{path('bookByCat',{'id':category.id})}} " class='btn btn-success'>View</a>
+                            <a href="{{ path('book_editcat', {'id': category.id}) }}" class='btn btn-default'>EditCat</a>
+                            <a href="{{ path('book_deletecat', {'id': category.id}) }} "class='btn btn-danger'>Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="bs-example" data-example-id="striped-table">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Book Name</th>
+                    <th>Description</th>
+                    <th>Image</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for book in books %}
+                    <tr>
+                        <th scope="row">{{ book.id }}</th>
+                        <td>{{ book.BkName }}</td>
+                        <td>{{ book.Description }}</td>
+                        <td> <a href="{{ asset('upload/bookImages/' ~ book.image) }}">View image</a><td>
+                        <td>
+                            {#                        <a href="{{ path('todo_details', {'id': book.id}) }} " class='btn btn-success'>View</a>#}
+                            {#                        <a href="{{ path('todo_edit', {'id': book.id}) }}" class='btn btn-default'>Edit</a>#}
+                            {#                        <a href="{{ path('todo_delete', {'id': book.id}) }}" class='btn btn-danger'>Delete</a>#}
+                            <a href="{{path('book_details',{'id':book.id})}} " class='btn btn-success'>View</a>
+                            <a href="{{ path('todo_edit', {'id': book.id}) }}" class='btn btn-default'>Edit</a>
+                            <a href="{{ path('book_delete', {'id': book.id}) }} "class='btn btn-danger'>Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endblock %}

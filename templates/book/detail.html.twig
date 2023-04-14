@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <a href="{{ path('books_list') }}" class="btn btn-default">Back to Book List</a>
+    <hr/>
+    <h2 class="page-header">{{ books.BkName }}</h2>
+    <ul class="list-group">
+        <li class="list-group-item">Image: {{ books.Image }}</li>
+    </ul>
+    <p>{{ books.Content }}</p>
+{% endblock %}

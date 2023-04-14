@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
@@ -16,32 +15,28 @@ class Book
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'Books')]
-    private Collection $tag;
-
-    #[ORM\OneToMany(mappedBy: 'Books', targetEntity: Author::class)]
-    private Collection $author;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $BkName = null;
 
+    #[ORM\OneToMany(mappedBy: 'book', targetEntity: Author::class)]
+    private Collection $author;
+
+    #[ORM\OneToMany(mappedBy: 'book', targetEntity: Category::class)]
+    private Collection $Category;
+
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Detail = null;
+    private ?string $Description = null;
+
+    #[ORM\Column(length: 4294967292, nullable: true)]
+    private ?string $Content = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Image = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $Date = null;
-
-    #[ORM\OneToMany(mappedBy: 'book', targetEntity: Chapter::class)]
-    private Collection $chapters;
-
     public function __construct()
     {
-        $this->tag = new ArrayCollection();
         $this->author = new ArrayCollection();
-        $this->chapters = new ArrayCollection();
+        $this->Category = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -49,26 +44,14 @@ class Book
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Tag>
-     */
-    public function getTag(): Collection
+    public function getBkName(): ?string
     {
-        return $this->tag;
+        return $this->BkName;
     }
 
-    public function addTag(Tag $tag): self
+    public function setBkName(?string $BkName): self
     {
-        if (!$this->tag->contains($tag)) {
-            $this->tag->add($tag);
-        }
-
-        return $this;
-    }
-
-    public function removeTag(Tag $tag): self
-    {
-        $this->tag->removeElement($tag);
+        $this->BkName = $BkName;
 
         return $this;
     }
@@ -85,7 +68,7 @@ class Book
     {
         if (!$this->author->contains($author)) {
             $this->author->add($author);
-            $author->setBooks($this);
+            $author->setBook($this);
         }
 
         return $this;
@@ -95,34 +78,64 @@ class Book
     {
         if ($this->author->removeElement($author)) {
             // set the owning side to null (unless already changed)
-            if ($author->getBooks() === $this) {
-                $author->setBooks(null);
+            if ($author->getBook() === $this) {
+                $author->setBook(null);
             }
         }
 
         return $this;
     }
 
-    public function getBkName(): ?string
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategory(): Collection
     {
-        return $this->BkName;
+        return $this->Category;
     }
 
-    public function setBkName(?string $BkName): self
+    public function addCategory(Category $category): self
     {
-        $this->BkName = $BkName;
+        if (!$this->Category->contains($category)) {
+            $this->Category->add($category);
+            $category->setBook($this);
+        }
 
         return $this;
     }
 
-    public function getDetail(): ?string
+    public function removeCategory(Category $category): self
     {
-        return $this->Detail;
+        if ($this->Category->removeElement($category)) {
+            // set the owning side to null (unless already changed)
+            if ($category->getBook() === $this) {
+                $category->setBook(null);
+            }
+        }
+
+        return $this;
     }
 
-    public function setDetail(?string $Detail): self
+    public function getDescription(): ?string
     {
-        $this->Detail = $Detail;
+        return $this->Description;
+    }
+
+    public function setDescription(?string $Description): self
+    {
+        $this->Description = $Description;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->Content;
+    }
+
+    public function setContent(?string $Content): self
+    {
+        $this->Content = $Content;
 
         return $this;
     }
@@ -135,48 +148,6 @@ class Book
     public function setImage(?string $Image): self
     {
         $this->Image = $Image;
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->Date;
-    }
-
-    public function setDate(\DateTimeInterface $Date): self
-    {
-        $this->Date = $Date;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Chapter>
-     */
-    public function getChapters(): Collection
-    {
-        return $this->chapters;
-    }
-
-    public function addChapter(Chapter $chapter): self
-    {
-        if (!$this->chapters->contains($chapter)) {
-            $this->chapters->add($chapter);
-            $chapter->setBook($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChapter(Chapter $chapter): self
-    {
-        if ($this->chapters->removeElement($chapter)) {
-            // set the owning side to null (unless already changed)
-            if ($chapter->getBook() === $this) {
-                $chapter->setBook(null);
-            }
-        }
 
         return $this;
     }

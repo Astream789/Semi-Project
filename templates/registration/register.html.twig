@@ -1,21 +1,53 @@
-{% extends 'base.html.twig' %}
+{% extends 'auth.html.twig' %}
+
 {% block title %}Register{% endblock %}
 
 {% block body %}
-<div class="row">
-    <div class="col-sm-4"></div>
-    <div class="col-sm-4"> <h1>Register</h1>
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <div class="login100-pic js-tilt" data-tilt>
+                <img src="https://s.tmimgcdn.com/scr/1200x750/183700/modern-shopping-business-logo-template_183766-original.jpg" alt="IMG">
+            </div>
+            {{ form_start(registrationForm) }}
+            <div class="login100-form validate-form">
+                    <span class="login100-form-title">
+                        Sign-up member
+                    </span>
 
-        {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+                    <i{{ form_row(registrationForm.email) }}
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                        </span>
+                </div>
 
-        <button type="submit" class="btn">Register</button>
-        {{ form_end(registrationForm) }}</div>
-    <div class="col-sm-4"></div>
-</div>
+                <div class="wrap-input100 validate-input" data-validate = "Password is required">
+                    {{ form_row(registrationForm.plainPassword, {
+                        label: 'Password'
+                    }) }}
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+                            <i class="fa fa-lock" aria-hidden="true"></i>
+                        </span>
+                </div>
+                {{ form_row(registrationForm.agreeTerms) }}
+                <div class="container-login100-form-btn">
+                    <button type="submit" class="login100-form-btn">
+                        Register
+                    </button>
+                </div>
 
-{% endblock %}
+                <div class="text-center p-t-12">
+                    <a class="txt2" href="{{path('app_login')}}">
+                        Already has account? Sign-in now
+                        <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
+    {% endblock %}
