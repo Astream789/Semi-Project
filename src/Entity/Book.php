@@ -3,8 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\BookRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
@@ -15,139 +14,112 @@ class Book
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $BkName = null;
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'book', targetEntity: Author::class)]
-    private Collection $author;
+//    #[ORM\Column(type: Types::TEXT)]
+//    private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'book', targetEntity: Category::class)]
-    private Collection $Category;
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Description = null;
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $content = null;
 
-    #[ORM\Column(length: 4294967292, nullable: true)]
-    private ?string $Content = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $image = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Image = null;
+    #[ORM\ManyToOne(inversedBy: 'book')]
+    private ?Genre $genre = null;
 
-    public function __construct()
-    {
-        $this->author = new ArrayCollection();
-        $this->Category = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(inversedBy: 'book')]
+    private ?Author $author = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBkName(): ?string
+    public function getName(): ?string
     {
-        return $this->BkName;
+        return $this->name;
     }
 
-    public function setBkName(?string $BkName): self
+    public function setName(string $name): self
     {
-        $this->BkName = $BkName;
+        $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Author>
-     */
-    public function getAuthor(): Collection
+//    public function getDescription(): ?string
+//    {
+//        return $this->description;
+//    }
+//
+//    public function setDescription(string $description): self
+//    {
+//        $this->description = $description;
+//
+//        return $this;
+//    }
+
+    public function getDate(): ?\DateTimeInterface
     {
-        return $this->author;
+        return $this->date;
     }
 
-    public function addAuthor(Author $author): self
+    public function setDate(?\DateTimeInterface $date): self
     {
-        if (!$this->author->contains($author)) {
-            $this->author->add($author);
-            $author->setBook($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAuthor(Author $author): self
-    {
-        if ($this->author->removeElement($author)) {
-            // set the owning side to null (unless already changed)
-            if ($author->getBook() === $this) {
-                $author->setBook(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Category>
-     */
-    public function getCategory(): Collection
-    {
-        return $this->Category;
-    }
-
-    public function addCategory(Category $category): self
-    {
-        if (!$this->Category->contains($category)) {
-            $this->Category->add($category);
-            $category->setBook($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): self
-    {
-        if ($this->Category->removeElement($category)) {
-            // set the owning side to null (unless already changed)
-            if ($category->getBook() === $this) {
-                $category->setBook(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->Description;
-    }
-
-    public function setDescription(?string $Description): self
-    {
-        $this->Description = $Description;
+        $this->date = $date;
 
         return $this;
     }
 
     public function getContent(): ?string
     {
-        return $this->Content;
+        return $this->content;
     }
 
-    public function setContent(?string $Content): self
+    public function setContent(string $content): self
     {
-        $this->Content = $Content;
+        $this->content = $content;
 
         return $this;
     }
 
     public function getImage(): ?string
     {
-        return $this->Image;
+        return $this->image;
     }
 
-    public function setImage(?string $Image): self
+    public function setImage(?string $image): self
     {
-        $this->Image = $Image;
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getGenre(): ?Genre
+    {
+        return $this->genre;
+    }
+
+    public function setGenre(?Genre $genre): self
+    {
+        $this->genre = $genre;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Author
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Author $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

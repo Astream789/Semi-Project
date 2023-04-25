@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid pr-0 pl-0">
+        <div class="row pt-5 pb-5">
+            <div class="col-12 text-center">
+                <h1>{{title}}</h1>
+            </div>
+        </div>
+        <div class="text-right pb-2 pr-2">
+                <a name="" id="" class="btn btn-info" href="{{ path('create_book') }}" role="button">ADD NEW BOOK</a>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                {% for type, messages in app.flashes() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ type }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set i = 0  %}
+                    {% for books in book %}
+                    {% set i = i + 1 %}
+                    <tr>
+                        <th scope="row">{{ i }}</th>
+                        <td><b>{{ books.name }}</b></td>
+                        <td>{{books.date|date('jS F, Y')}}</td>
+                        <td>
+                            {% if books.image ??'' == '' %}
+                                <img src="/img/no-img.png" style="height: 120px">
+                            {% else %}
+                                <img src="{{ books.image ?? '' }}" style="height: 120px">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a name="" id="" class="btn btn-primary" href="#" role="button">View</a>
+                            <a name="" id="" class="btn btn-success" href="{{ path('update_book', {'id':books.id}) }}" role="button">Edit</a>
+                            <a name="" id="" class="btn btn-danger" href="{{ path('remove_book', {'id':books.id}) }}" role="button">Remove</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

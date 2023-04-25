@@ -3,215 +3,150 @@
 namespace App\Controller;
 
 use App\Entity\Book;
-use App\Entity\Category;
-
-use App\Form\CategoryType;
+use App\Form\BookFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use App\Form\BookType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Repository\BookRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class BookController extends AbstractController
 {
-    /**
-     * @Route("/Book", name="Book")
-     */
-    public function index(ManagerRegistry $doctrine): Response
-    {
-        $category = new Category();
-        $category->setCatName('Category Book');
-
-        $book = new Book();
-        $book->setBkName('Book');;
-        $book->setDescription('Ergonomic and stylish!');
-
-
-        // relates this Book to the category
-        $book->setCategory($category);
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($category);
-        $entityManager->persist($book);
-        $entityManager->flush();
-
-        return new Response(
-            'Saved new book with id: ' . $book->getId()
-            . ' and new category with id: ' . $category->getId()
-        );
-    }
-    #[Route('/booklist', name: 'book_list')]
-    public function listAction(ManagerRegistry $doctrine): Response
-    {
-        $books = $doctrine->getRepository('App\Entity\Book')->findAll();
-        // $categoryName = $books->getCategory()->getCatName()->toArray();
-        $categories = $doctrine->getRepository('App\Entity\Category')->findAll();
-        return $this->render('book/index.html.twig', [
-            'books' => $books,
-            'categories' => $categories
-        ]);
-    }
-    /**
-     * @Route("/book/details/{id}", name="book_details")
-     */
-    public  function detailsAction(ManagerRegistry $doctrine, $id)
-    {
-        $books = $doctrine->getRepository('App\Entity\Book')->find($id);
-
-        return $this->render('book/details.html.twig', ['books' => $books]);
+    private $em;
+    private $bookRepository;
+    public function __construct(EntityManagerInterface $em, BookRepository $bookRepository) {
+        $this->em = $em;
+        $this->bookRepository = $bookRepository;
     }
 
-
-
-    /**
-     * @Route("/category/delete/{id}", name="book_deletecat")
-     */
-    public function deletecatAction(ManagerRegistry $doctrine, $id)
+    //List Books
+    #[Route('/book', name: 'app_book')]
+    public function index(): Response
     {
-        $em = $doctrine->getManager();
-        $book = $em->getRepository('App\Entity\Category')->find($id);
-        $em->remove($book);
-        $em->flush();
-
-        $this->addFlash(
-            'error',
-            'Category deleted'
-        );
-
-        return $this->redirectToRoute('book_list');
+        $book = $this->bookRepository->findAll();
+        $data = [
+            'title' => 'Book List',
+            'book' => $book,
+        ];
+        return $this->render('book/list.html.twig', $data);
     }
-
-    /**
-     * @Route("/book/delete/{id}", name="book_delete")
-     */
-    public function deleteAction(ManagerRegistry $doctrine, $id)
-    {
-        $em = $doctrine->getManager();
-        $book = $em->getRepository('App\EntiTy\Book')->find($id);
-        $em->remove($book);
-        $em->flush();
-
-        $this->addFlash(
-            'error',
-            'Book deleted'
-        );
-
-        return $this->redirectToRoute('book_list');
-    }
-
-    /**
-     * @Route("/todo/edit/{id}", name="todo_edit" )
-     */
-    public function editAction(ManagerRegistry $doctrine, $id, Request $request)
-    {
-        $todo = new Book();
-        $em = $doctrine->getManager();
-        $todo = $em->getRepository('App\Enity\Book')->find($id);
-        $form = $this->createForm(BookType::class, $todo);
-
-        $form->handleRequest($request);
-
-
-        if ($form->isSubmitted()) {
-
-            $entityManager = $doctrine->getManager();
-
-            $entityManager->persist($todo);
-
-            $entityManager->flush();
-            return $this->redirectToRoute('Book_list');
-        }
-
-        return $this->render('Book/edit.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/book/createbk", name="book_create", methods={"GET","POST"})
-     */
-    public function createAction(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger)
+    //Create new book
+    #[Route('/create', name: 'create_book')]
+    public function create(Request $request): Response
     {
         $book = new Book();
-        $form = $this->createForm(BookType::class, $book);
-
+        $form = $this->createForm(BookFormType::class, $book);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            // uplpad file
-            $bookImage = $form->get('Image')->getData();
-            if ($bookImage) {
-                $originalFilename = pathinfo($bookImage->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $bookImage->guessExtension();
+            $newBook = $form->getData();
+            $imagePath = $form->get('image')->getData();
+            if ($imagePath) {
+                $newFileName = uniqid() . '.' . $imagePath->guessExtension();
 
-                // Move the file to the directory where brochures are stored
                 try {
-                    $bookImage->move(
-                        $this->getParameter('bookImages_directory'),
-                        $newFilename
+                    //code...
+                    $imagePath->move(
+                        $this->getParameter('kernel.project_dir') . '/public/uploads',
+                        $newFileName
                     );
                 } catch (FileException $e) {
-                    $this->addFlash(
-                        'error',
-                        'Cannot upload'
-                    ); // ... handle exception if something happens during file upload
+                    //throw $th;
+                    return new Response($e->getMessage());
                 }
-                $book->setImage($newFilename);
-            } else {
-                $this->addFlash(
-                    'error',
-                    'Cannot upload'
-                ); // ... handle exception if something happens during file upload
+                $newBook->setImage('/uploads/' . $newFileName);
             }
-            $em = $doctrine->getManager();
-            $em->persist($book);
-            $em->flush();
+            $this->em->persist($newBook);
+            $this->em->flush();
 
-            $this->addFlash(
-                'notice',
-                'book Added'
-            );
-            return $this->redirectToRoute('book_list');
+            $this->addFlash('success', 'Added successfully.');
+            return $this->redirectToRoute('create_book');
         }
-        return $this->renderForm('book/createbk.html.twig', ['form' => $form,]);
+        $data = [
+            'form' => $form->createView(),
+            'title' => 'ADD NEW BOOK',
+        ];
+        return $this->render('book/form.html.twig', $data);
     }
 
-    public function saveChanges(ManagerRegistry $doctrine, $form, $request, $book)
+    //Edit book
+    #[Route('/edit-book-{id}', name: 'update_book')]
+    public function update(Request $request, $id): Response
     {
+        $book = $this->bookRepository->find($id);
+        $form = $this->createForm(BookFormType::class, $book);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $book->setName($request->request->get('book')['bkname']);
-            $book->setCategory($request->request->get('book')['category']);
-            $book->setDetail($request->reques->get('book'['content']));
-            $book->setDescription($request->request->get('book')['description']);
-            $em = $doctrine->getManager();
-            $em->persist($book);
-            $em->flush();
+            $imagePath = $form->get('image')->getData();
+            if ($imagePath) {
+                $img = $book->getImage();
+                if ($img !== null) {
+                    // $file = file_exists($this->getParameter('kernel.project_dir') . $actor->getImage());
+                    $file = $this->getParameter('kernel.project_dir') . '/public' . $book->getImage();
+                    if ($file) {
+                        $this->GetParameter('kernel.project_dir') . $book->getImage();
+                        $newFileName = uniqid() . '.' . $imagePath->guessExtension();
 
-            return true;
+                        try {
+                            //code...
+                            $imagePath->move(
+                                $this->getParameter('kernel.project_dir') . '/public/uploads',
+                                $newFileName
+                            );
+                        } catch (FileException $e) {
+                            //throw $th;
+                            return new Response($e->getMessage());
+                        }
+
+                        $book->setImage('/uploads/' . $newFileName);
+                        $this->em->flush();
+
+                        $this->addFlash('success', 'Update successfully.');
+                        return $this->redirectToRoute('update_book', ['id' => $id]);
+                    }
+                }
+            } else {
+                $book->setName($form->get('name')->getData());
+                $book->setDate($form->get('date')->getData());
+                $book->setContent($form->get('content')->getData());
+                $book->setImage($form->get('image')->getData());
+                $book->setGenre($form->get('genre')->getData());
+                $book->setAuthor($form->get('author')->getData());
+
+                $this->em->flush();
+                $this->addFlash('success', 'Update successfully.');
+                return $this->redirectToRoute('update_book', ['id' => $id]);
+            }
         }
-
-        return false;
+        $data = [
+            'title' => 'EDIT BOOK: ',
+            'book' => $book,
+            'form' => $form->createView(),
+        ];
+        return $this->render('book/form.html.twig', $data);
     }
 
-    /**
-     * @Route("/book/bookByCat/{id}", name="bookByCat")
-     */
-    public  function bookByCatAction(ManagerRegistry $doctrine, $id): Response
+    //Delete Book
+    #[Route('/delete-book-{id}', name: 'remove_book')]
+    public function destroy($id): Response
     {
-        $category = $doctrine->getRepository(Category::class)->find($id);
-        $books = $category->getBook();
-        $categories = $doctrine->getRepository('App\Entity\Category')->findAll();
-        return $this->render('book/index.html.twig', [
-            'books' => $books,
-            'categories' => $categories
-        ]);
+        $book = $this->bookRepository->find($id);
+        $this->em->remove($book);
+        $this->em->flush();
+        $this->addFlash('primary', 'Remove Successfully');
+        return $this->redirectToRoute('app_book');
+    }
+
+    #[Route('/detail-{id}', name: 'detail_book')]
+    public function detail($id): Response
+    {
+        $book = $this->bookRepository->find($id);
+        $data = [
+            'title' => 'Book Detail',
+            'book' => $book,
+        ];
+        return $this->render('book/detail.html.twig', $data);
     }
 }
+

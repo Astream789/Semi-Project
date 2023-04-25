@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid pr-0 pl-0">
+        <div class="row pt-5 pb-5">
+            <div class="col-12 text-center">
+                <h1>{{title}} {{ book.name ?? '' }}</h1>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-6 text-center">
+                {% for type, messages in app.flashes() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ type }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {{ form_start(form) }}
+                    {{
+                        form_widget(form.name,{
+                            'attr':{
+                                'class' : 'form-control mt-2',
+                                'type': 'text',
+                                'placeholder' : 'Book Title'
+                            }
+                        })
+                    }}
+                {{
+                form_widget(form.genre,{
+                    'attr':{
+                        'class' : 'form-control mt-2',
+                        'placeholder' : 'Genre'
+                    }
+                })
+                }}
+                {{
+                form_widget(form.author,{
+                    'attr':{
+                        'class' : 'form-control mt-2',
+                        'placeholder' : 'Author'
+                    }
+                })
+                }}
+                <!-- Date Picker -->
+                <div class="form-group mb-0 mt-2">
+                    <div class="datepicker date input-group">
+                        {{
+                        form_widget(form.date)
+                        }}
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-left mt-2">
+                    {% if book.image ??'' == '' %}
+                    <img src="/img/no-img.png" style="height: 200px">
+                    {% else %}
+                    <img src="{{ book.image ?? '' }}" style="height: 200px">
+                    {% endif %}
+                </div>
+                <!-- // Date Picker -->
+                {{
+                form_widget(form.image,{
+                    'attr':{
+                        'class' : 'form-control mt-2',
+                        'type': 'text',
+                        'placeholder' : 'Book Title'
+                    }
+                })
+                }}
+                {{
+                form_widget(form.content,{
+                    'attr':{
+                        'class' : 'form-control mt-2',
+                        'type': 'text',
+                        'placeholder' : 'Book Title'
+                    }
+                })
+                }}
+                <div class="form-group mt-2 text-right">
+                    <a name="" id="" class="btn btn-secondary" href="{{ path('app_book') }}" role="button">BACK</a>
+                    <button type="submit" class="btn btn-primary">SAVE</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
