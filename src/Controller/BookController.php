@@ -19,7 +19,7 @@ class BookController extends AbstractController
     public function __construct(EntityManagerInterface $em, BookRepository $bookRepository) {
         $this->em = $em;
         $this->bookRepository = $bookRepository;
-    }
+}
 
     //List Books
     #[Route('/book', name: 'app_book')]
@@ -138,15 +138,15 @@ class BookController extends AbstractController
         return $this->redirectToRoute('app_book');
     }
 
-    #[Route('/detail-{id}', name: 'detail_book')]
+    #[Route('/detail/{id}', name: 'detail_book')]
     public function detail($id): Response
     {
-        $book = $this->bookRepository->find($id);
-        $data = [
-            'title' => 'Book Detail',
-            'book' => $book,
-        ];
-        return $this->render('book/detail.html.twig', $data);
+
+        $detail = $this->bookRepository->find($id);
+//        dd($book);
+        return $this->render('book/detail.html.twig', [
+            'detail'=> $detail
+        ]);
     }
 }
 

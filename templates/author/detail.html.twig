@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <H1 class="text-center">List Book by {{ author.name }}</H1>
+    <div class="row">
+        <div class="col-12 text-center">
+            {% for book in author.getBook() %}
+                <div class="col-md-3">
+                    <div class="card" style="width: 18rem;">
+                        <td>
+                            {% if book.image ??'' == '' %}
+                                <img src="/img/no-img.png" style="height: 120px">
+                            {% else %}
+                                <img src="{{ book.image ?? '' }}" style="height: 200px">
+                            {% endif %}
+                        </td>
+                        <div class="card-body">
+                            <h5 class="card-title">{{book.name}}</h5>
+                            <p class="card-text"><b>Release:</b> {{book.date|date('Y')}}</p>
+                            <p class="card-text"><b>Author:</b> {{ book.author.name }}</p>
+                            <p class="card-text"><b>Genre:</b> {{ book.genre.name }}</p>
+                            <a href="{{ path('detail_book', {'id':book.id}) }}" class="btn btn-secondary">View</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

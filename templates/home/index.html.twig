@@ -3,22 +3,29 @@
 <div class="container-fluid pr-0 pl-0">
     <div class="row pt-5 pb-5">
         <div class="col-12 text-center">
-            <h1>{{ title }}</h1>
+            <h1>Home Page</h1>
         </div>
     </div>
     <div class="row">
-        {% for books in book %}
-        <div class="col-md-3">
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="https://pbs.twimg.com/media/FNNjMp9acAArZnI?format=jpg&name=large" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">{{books.name}}</h5>
-                    <p class="card-text"><b>Release:</b> {{books.date|date('Y')}}</p>
-                    <p class="card-text"><b>Author:</b> Skinkai Makoto</p>
-                    <a href="#" class="btn btn-secondary">View</a>
+        {% for book in books %}
+            <div class="col-md-3">
+                <div class="card" style="width: 18rem;">
+                    <td>
+                        {% if book.image ??'' == '' %}
+                            <img src="/img/no-img.png" style="height: 120px">
+                        {% else %}
+                            <img src="{{ book.image ?? '' }}" style="height: 120px">
+                        {% endif %}
+                    </td>
+                    <div class="card-body">
+                        <h5 class="card-title">{{book.name}}</h5>
+                        <p class="card-text"><b>Release:</b> {{book.date|date('Y')}}</p>
+                        <p class="card-text"><b>Author:</b> {{ book.author.name }}</p>
+                        <p class="card-text"><b>Genre:</b> {{ book.genre.name }}</p>
+                        <a href="{{ path('detail_book', {'id':book.id}) }}" class="btn btn-secondary">View</a>
+                    </div>
                 </div>
             </div>
-        </div>
         {% endfor %}
     </div>
 </div>

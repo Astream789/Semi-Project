@@ -45,7 +45,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a name="" id="" class="btn btn-primary" href="#" role="button">View</a>
+                            <a name="" id="" class="btn btn-primary" href="{{ path('detail_book', {'id':books.id}) }}" role="button">View</a>
                             <a name="" id="" class="btn btn-success" href="{{ path('update_book', {'id':books.id}) }}" role="button">Edit</a>
                             <a name="" id="" class="btn btn-danger" href="{{ path('remove_book', {'id':books.id}) }}" role="button">Remove</a>
                         </td>

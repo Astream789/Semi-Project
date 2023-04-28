@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid pr-0 pl-0">
+        <div class="row pt-5 pb-5">
+            <div class="col-12 text-center">
+                <h1>{{title}} {{ author.name ?? '' }}</h1>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-6 text-center">
+                {% for type, messages in app.flashes() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ type }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {{ form_start(form) }}
+                {{
+                form_widget(form.name,{
+                    'attr':{
+                        'class' : 'form-control mt-2',
+                        'type': 'text',
+                        'placeholder' : 'Author Name'
+                    }
+                })
+                }}
+                <div class="form-group mt-2 text-right">
+                    <a name="" id="" class="btn btn-secondary" href="{{ path('app_author') }}" role="button">BACK</a>
+                    <button type="submit" class="btn btn-primary">SAVE</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
