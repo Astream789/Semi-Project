@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-   <div class="row pt-5 pb-5">
-   <div class="col-12 text-center">
+   <div class="row pl-0 pb-5 mr-6 mr-2">
+    <div class="container-fluid col-md-15">    <button class="text-center pt-4 text-muted"><a href="{{ path('app_book') }}">Go back</a> </button>
+    </div>
+    <div class="col-12 text-center">
       <h1>Title: {{ detail.name }}</h1>
    </div>
    <div class="container-fluid col-md-4">
@@ -31,6 +33,6 @@
    </div>
     <div class="form-group container-fluid col-md-8" align="center">
         <label for="exampleFormControlTextarea1">Content:</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">{{ detail.content }}</textarea>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="20">{{ detail.content }}</textarea>
     </div>
 {% endblock %}
